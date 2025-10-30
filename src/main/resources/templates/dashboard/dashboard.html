@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html layout:decorate="~{base}">
+<head>
+    <title>Dashboard - Hotel</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container mt-4">
+    <h1 class="fw-bold mb-4">Bienvenido al Panel de Control 🏨</h1>
+
+    <div class="row g-4">
+        <div class="col-md-3">
+            <div class="card text-center shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Reservas activas</h5>
+                    <p class="display-6 text-primary fw-bold">24</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Habitaciones disponibles</h5>
+                    <p class="display-6 text-success fw-bold">15</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Huéspedes registrados</h5>
+                    <p class="display-6 text-info fw-bold">120</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Ingresos del mes</h5>
+                    <p class="display-6 text-warning fw-bold">$12,500</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="mt-5 mb-3">Últimas Reservas</h3>
+    <div class="table-responsive">
+        <table class="table table-hover table-sm">
+            <thead class="table-light">
+                <tr>
+                    <th>Huésped</th>
+                    <th>Habitación</th>
+                    <th>Check-in</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Juan Pérez</td>
+                    <td>101 - Suite</td>
+                    <td>2025-09-28</td>
+                    <td><span class="badge bg-success">Confirmada</span></td>
+                </tr>
+                <tr>
+                    <td>María López</td>
+                    <td>202 - Doble</td>
+                    <td>2025-09-30</td>
+                    <td><span class="badge bg-warning text-dark">Pendiente</span></td>
+                </tr>
+                <tr>
+                    <td>Carlos Ramírez</td>
+                    <td>305 - Simple</td>
+                    <td>2025-09-29</td>
+                    <td><span class="badge bg-danger">Cancelada</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

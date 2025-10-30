@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html layout:decorate="~{base}">
+<head>
+    <title>Gestión de Habitaciones</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="fw-bold">Gestión de Habitaciones</h1>
+        <a th:href="@{/habitaciones/nueva}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Nueva Habitación
+        </a>
+    </div>
+
+    <div th:if="${param.exito}" class="alert alert-success alert-dismissible fade show" role="alert">
+        Habitación guardada exitosamente
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${param.eliminado}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        Habitación eliminada exitosamente
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover table-striped">
+            <thead class="table-primary">
+                <tr>
+                    <th>Número</th>
+                    <th>Tipo</th>
+                    <th>Capacidad</th>
+                    <th>Precio/Noche</th>
+                    <th>Estado</th>
+                    <th class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="habitacion : ${habitaciones}">
+                    <td th:text="${habitacion.numero}"></td>
+                    <td th:text="${habitacion.tipo}"></td>
+                    <td th:text="${habitacion.capacidad}"></td>
+                    <td th:text="${habitacion.precioPorNoche} + ' USD'"></td>
+                    <td>
+                        <span th:class="${habitacion.estado == 'Disponible' ? 'badge bg-success' 
+                                        : (habitacion.estado == 'Ocupada' ? 'badge bg-danger' 
+                                        : 'badge bg-warning')}">
+                            <span th:text="${habitacion.estado}"></span>
+                        </span>
+                    </td>
+                    <td class="text-center">
+                        <a th:href="@{/habitaciones/editar/{id}(id=${habitacion.id})}" 
+                           class="btn btn-warning btn-sm me-2">Editar</a>
+                        <a href="#"
+                           class="btn btn-danger btn-sm"
+                           data-bs-toggle="modal"
+                           data-bs-target="#confirmDeleteModal"
+                           th:data-id="${habitacion.id}"
+                           th:data-action="@{/habitaciones/eliminar}"
+                           data-entity="habitación"
+                           sec:authorize="hasRole('ADMIN')">Eliminar</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

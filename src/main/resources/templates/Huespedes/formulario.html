@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html layout:decorate="~{base}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${huesped.id != null} ? 'Editar Huésped' : 'Nuevo Huésped'"></title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container mt-4">
+    <h1 th:text="${huesped.id != null} ? 'Editar Huésped' : 'Nuevo Huésped'" class="mb-4"></h1>
+
+    <div th:if="${error}" class="alert alert-danger fade show" role="alert">
+        <span th:text="${error}"></span>
+    </div>
+
+    <form th:action="@{/huespedes/guardar}" th:object="${huesped}" method="post">
+        <input type="hidden" th:field="*{id}">
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Nombre Completo:</label>
+                    <input type="text" id="nombre" th:field="*{nombre}" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="identificacion" class="form-label">Identificación (DNI/Cédula):</label>
+                    <input type="text" id="identificacion" th:field="*{identificacion}" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="telefono" class="form-label">Teléfono:</label>
+                    <input type="tel" id="telefono" th:field="*{telefono}" class="form-control">
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email:</label>
+                    <input type="email" id="email" th:field="*{email}" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="direccion" class="form-label">Dirección:</label>
+                    <input type="text" id="direccion" th:field="*{direccion}" class="form-control">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Activo:</label>
+                    <div class="form-check form-switch">
+                        <input type="checkbox" id="flgEstado" th:field="*{flgEstado}" class="form-check-input" value="1">
+                        <label for="flgEstado" class="form-check-label">Huésped activo</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-end mt-4">
+            <a th:href="@{/huespedes}" class="btn btn-secondary me-2">Cancelar</a>
+            <button type="submit" class="btn btn-success">Guardar</button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

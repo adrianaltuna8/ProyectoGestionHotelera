@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html layout:decorate="~{base}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Cargar Consumos a Reservas</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="fw-bold">Gestión de Consumos (Reservas Activas)</h1>
+    </div>
+
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:utext="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <span th:text="${errorMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover table-striped">
+            <thead class="table-primary">
+                <tr>
+                    <th>ID Reserva</th>
+                    <th>Huésped Principal</th>
+                    <th>Habitación</th>
+                    <th>Check-In</th>
+                    <th>Check-Out Previsto</th>
+                    <th>Estado Actual</th>
+                    <th class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="reserva : ${reservas}">
+                    <td th:text="${reserva.id}"></td>
+                    <td th:text="${reserva.huesped.nombre}"></td>
+                    <td th:text="${reserva.habitacion.numero}"></td>
+                    <td th:text="${reserva.fechaEntrada}"></td>
+                    <td th:text="${reserva.fechaSalida}"></td>
+                    <td>
+                        <span th:text="${reserva.estadoReserva}"
+                              th:class="${reserva.estadoReserva == 'Check-In'} ? 'badge bg-success' : 'badge bg-warning'">
+                        </span>
+                    </td>
+                    <td class="text-center">
+                        <a th:href="@{/consumos/formulario/{id}(id=${reserva.id})}"
+                           class="btn btn-info btn-sm">
+                            <i class="fas fa-cart-plus"></i> Añadir Cargos
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

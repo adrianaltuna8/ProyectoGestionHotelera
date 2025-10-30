@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html layout:decorate="~{base}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Gestión de Reservas</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="fw-bold">Gestión de Reservas - <span th:text="${vistaActual}"></span></h1>
+        <a th:href="@{/reservas/formulario}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Nueva Reserva
+        </a>
+    </div>
+
+    <div class="d-flex mb-4">
+        <a th:href="@{/reservas}" 
+           th:classappend="${vistaActual == 'Llegadas de Hoy' ? 'btn-primary' : 'btn-outline-primary'}"
+           class="btn me-2">Llegadas Hoy</a>
+           
+        <a th:href="@{/reservas/alojadas}" 
+           th:classappend="${vistaActual == 'Huéspedes Alojados' ? 'btn-primary' : 'btn-outline-primary'}"
+           class="btn me-2">Alojados</a>
+           
+        <a th:href="@{/reservas/salidas}" 
+           th:classappend="${vistaActual == 'Salidas de Hoy' ? 'btn-primary' : 'btn-outline-primary'}"
+           class="btn me-2">Salidas Hoy</a>
+
+        <a th:href="@{/reservas/proximas}" 
+           th:classappend="${vistaActual == 'Próximas Llegadas' ? 'btn-secondary' : 'btn-outline-secondary'}"
+           class="btn me-2">Próximas</a>
+           
+        <a th:href="@{/reservas/historial}" 
+           th:classappend="${vistaActual == 'Historial' ? 'btn-secondary' : 'btn-outline-secondary'}"
+           class="btn">Historial</a>
+    </div>
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <span th:text="${errorMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover table-striped">
+            <thead class="table-primary">
+                <tr>
+                    <th>ID</th>
+                    <th>Huésped</th>
+                    <th>Habitación</th>
+                    <th>Entrada</th>
+                    <th>Salida</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="reserva : ${reservas}">
+                    <td th:text="${reserva.id}"></td>
+                    <td th:text="${reserva.huesped.nombre}"></td>
+                    <td th:text="${reserva.habitacion.numero}"></td>
+                    <td th:text="${#temporals.format(reserva.fechaEntrada, 'dd/MM/yyyy')}"></td>
+                    <td th:text="${#temporals.format(reserva.fechaSalida, 'dd/MM/yyyy')}"></td>
+                    <td th:text="${#numbers.formatDecimal(reserva.precioTotal, 1, 2)} + ' USD'"></td>
+                    <td>
+                        <span th:class="${reserva.estadoReserva == 'Confirmada' ? 'badge bg-success' 
+                                       : (reserva.estadoReserva == 'Pendiente' ? 'badge bg-warning'
+                                       : (reserva.estadoReserva == 'Check-In' ? 'badge bg-primary'
+                                       : (reserva.estadoReserva == 'Check-Out' ? 'badge bg-secondary' 
+                                       : 'badge bg-danger')))}"
+                              th:text="${reserva.estadoReserva}">
+                        </span>
+                    </td>
+                    <td class="text-center">
+                        <a th:if="${reserva.estadoReserva == 'Confirmada' or reserva.estadoReserva == 'Pendiente'}" 
+                           th:href="@{/reservas/checkin/{id}(id=${reserva.id})}"
+                           class="btn btn-success btn-sm me-2"
+                           title="Registrar la llegada del huésped">Check-In</a>
+
+                        <a th:if="${reserva.estadoReserva == 'Check-In'}" 
+                           th:href="@{/reservas/checkout/{id}(id=${reserva.id})}"
+                           class="btn btn-primary btn-sm me-2"
+                           title="Registrar la salida y liquidación final">Check-Out</a>
+                           
+                        <a th:if="${reserva.estadoReserva != 'Check-Out' and reserva.estadoReserva != 'Cancelada'}"
+                           th:href="@{/reservas/formulario/{id}(id=${reserva.id})}" 
+                           class="btn btn-warning btn-sm me-2"
+                           title="Modificar datos de la reserva">Editar</a>
+
+                        <a th:if="${reserva.estadoReserva == 'Pendiente' or reserva.estadoReserva == 'Confirmada'}"
+                           th:href="@{/reservas/cancelar/{id}(id=${reserva.id})}"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('¿Está seguro de que desea cancelar esta reserva?');"
+                           title="Anular la reserva">Cancelar</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Nueva Factura</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+</head>
+<body class="container py-4">
+
+    <h2 class="mb-4">Generar Nueva Factura</h2>
+
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+
+    <form th:action="@{/facturas/generar}" method="post">
+        <div class="form-group mb-3">
+            <label for="reservaId">Seleccione una reserva activa:</label>
+            <select id="reservaId" name="reservaId" class="form-control" required>
+                <option value="" disabled selected>-- Seleccione una reserva --</option>
+                <option th:each="reserva : ${reservas}"
+                        th:value="${reserva.id}"
+                        th:text="'#' + ${reserva.id} + ' | ' + ${reserva.huesped.nombreCompleto} + ' | Habitación ' + ${reserva.habitacion.numeroHabitacion}">
+                </option>
+            </select>
+        </div>
+
+        <div class="text-end">
+            <button type="submit" class="btn btn-primary">Generar Factura</button>
+            <a th:href="@{/facturas}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+
+</body>
+</html>

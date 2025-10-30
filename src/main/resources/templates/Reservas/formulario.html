@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html layout:decorate="~{base}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${reserva.id != null} ? 'Editar Reserva' : 'Nueva Reserva'"></title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container mt-4">
+    <h1 th:text="${reserva.id != null} ? 'Editar Reserva' : 'Nueva Reserva'" class="mb-4"></h1>
+
+    <form th:action="@{/reservas/guardar}" th:object="${reserva}" method="post">
+        <input type="hidden" th:field="*{id}">
+        <input type="hidden" th:field="*{precioTotal}">
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="huesped" class="form-label">Seleccionar Huésped:</label>
+                    <select id="huesped" th:field="*{huesped}" class="form-select" required>
+                        <option th:value="null" disabled selected>-- Seleccione Huésped --</option>
+                        <option th:each="h : ${huespedes}" 
+                                th:value="${h.id}" 
+                                th:text="${h.nombre + ' (' + h.identificacion + ')'}">Nombre del Huésped</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="fechaEntrada" class="form-label">Fecha de Entrada:</label>
+                    <input type="date" id="fechaEntrada" th:field="*{fechaEntrada}" class="form-control" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="estadoReserva" class="form-label">Estado de la Reserva:</label>
+                    
+                    <select id="estadoReserva" th:field="*{estadoReserva}" class="form-select" required
+                            th:disabled="${reserva.estadoReserva == 'Check-In' or reserva.estadoReserva == 'Check-Out'}">
+                        <option value="">Seleccionar estado</option>
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="Confirmada">Confirmada</option>
+                        <option value="Check-In">Check-In</option>
+                        <option value="Check-Out">Check-Out</option>
+                        <option value="Cancelada">Cancelada</option>
+                    </select>
+                    
+                    <small th:if="${reserva.estadoReserva == 'Check-In' or reserva.estadoReserva == 'Check-Out'}" 
+                           class="form-text text-danger">El estado **Check-In/Out** debe gestionarse con los botones de acción rápida en la lista.
+                    </small>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="habitacion" class="form-label">Seleccionar Habitación:</label>
+                    <select id="habitacion" th:field="*{habitacion}" class="form-select" required>
+                        <option th:value="null" disabled selected>-- Seleccione Habitación --</option>
+                        <option th:each="h : ${habitaciones}" 
+                                th:value="${h.id}" 
+                                th:text="${'Nro ' + h.numero + ' (' + h.tipo + ' - ' + h.precioPorNoche + ' USD)'}">Número de Habitación</option>
+                    </select>
+                    <small class="form-text text-muted">Asegúrese de seleccionar una habitación disponible para las fechas.</small>
+                </div>
+
+                <div class="mb-3">
+                    <label for="fechaSalida" class="form-label">Fecha de Salida:</label>
+                    <input type="date" id="fechaSalida" th:field="*{fechaSalida}" class="form-control" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="precioTotalDisplay" class="form-label">Precio Total (Calculado):</label>
+                    <input type="text" id="precioTotalDisplay" 
+                           th:value="${reserva.precioTotal != null and reserva.precioTotal != 0 ? #numbers.formatDecimal(reserva.precioTotal, 1, 2) + ' USD' : 'Se calcula al guardar'}" 
+                           class="form-control" disabled>
+                    </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-end mt-4">
+            <a th:href="@{/reservas}" class="btn btn-secondary me-2">Cancelar</a>
+            <button type="submit" class="btn btn-success">Guardar Reserva</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>

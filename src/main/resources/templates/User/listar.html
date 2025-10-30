@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html layout:decorate="~{base}">
+<head>
+    <title>Gestión de Usuarios</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="fw-bold">Gestión de Usuarios</h1>
+        <a th:href="@{/usuarios/nuevo}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Nuevo Usuario
+        </a>
+    </div>
+
+    <div th:if="${param.exito}" class="alert alert-success alert-dismissible fade show" role="alert">
+        Usuario guardado exitosamente
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <div th:if="${param.eliminado}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        Usuario eliminado exitosamente
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    
+    <div class="table-responsive">
+        <table class="table table-hover table-striped">
+            <thead class="table-primary">
+                <tr>
+                    <th>Usuario</th>
+                    <th>Rol</th>
+                    <th>Estado</th>
+                    <th class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="usuario : ${usuarios}">
+                    <td th:text="${usuario.username}"></td>
+                    <td>
+                        <span th:text="${usuario.rol}"
+                            th:class="${usuario.rol == 'ADMIN'} ? 'badge bg-primary' : 'badge bg-secondary'">
+                        </span>
+                    </td>
+                    <td>
+                        <span th:text="${usuario.flgEstado}==1 ? 'Activo' : 'Inactivo'"
+                            th:class="${usuario.flgEstado==1} ? 'badge bg-success' : 'badge bg-danger'">
+                        </span>
+                    </td>
+                    <td class="text-center">
+                        <a th:href="@{usuarios/editar/{id}(id=${usuario.id})}"
+                            class="btn btn-warning btn-sm me-2">Editar</a>
+                        <!-- <a href="#"
+                           class="btn btn-danger btn-sm"
+                           data-bs-toggle="modal"
+                           data-bs-target="#confirmDeleteModal"
+                           th:data-id="${usuario.id}"
+                           th:data-action="@{/usuarios/eliminar}">Eliminar
+                        </a> -->
+                    </td> 
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

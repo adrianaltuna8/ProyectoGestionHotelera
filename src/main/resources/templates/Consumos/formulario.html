@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html layout:decorate="~{base}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Cargos a Reserva #[[${reserva.id}]]</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="fw-bold">Gestión de Cargos a Reserva #<span th:text="${reserva.id}"></span></h1>
+        <a th:href="@{/consumos/listar}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Volver a Reservas Activas
+        </a>
+    </div>
+
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:utext="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <span th:text="${errorMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-light fw-bold">Detalle Rápido de la Estancia</div>
+        <div class="card-body row">
+            <div class="col-md-4"><strong>Huésped:</strong> <span th:text="${reserva.huesped.nombre}"></span></div>
+            <div class="col-md-4"><strong>Habitación:</strong> <span th:text="${reserva.habitacion.numero}"></span></div>
+            <div class="col-md-4"><strong>Estado:</strong> <span th:text="${reserva.estadoReserva}"></span></div>
+        </div>
+    </div>
+
+    <div class="card mb-5 shadow-sm">
+        <div class="card-header bg-primary text-white fw-bold">Registrar Nuevo Cargo</div>
+        <div class="card-body">
+            <form th:action="@{/consumos/guardar}" th:object="${nuevoConsumo}" method="post">
+                <input type="hidden" th:field="*{reserva.id}" th:value="${reserva.id}">
+
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-6">
+                        <label for="servicio" class="form-label">Servicio/Producto:</label>
+                        <select id="servicio" th:field="*{servicio.id}" class="form-select" required>
+                            <option value="">-- Seleccione un Servicio --</option>
+                            <option th:each="servicio : ${serviciosDisponibles}"
+                                    th:value="${servicio.id}"
+                                    th:text="${servicio.nombre + ' (S/ ' + #numbers.formatDecimal(servicio.precio, 1, 2) + ')'}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label for="cantidad" class="form-label">Cantidad:</label>
+                        <input type="number" id="cantidad" th:field="*{cantidad}" class="form-control" min="1" value="1" required>
+                    </div>
+
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-success w-100">
+                            <i class="fas fa-check"></i> Añadir Cargo
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <h2 class="fw-bold mb-3">Historial de Cargos de la Cuenta</h2>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>Fecha</th>
+                    <th>Servicio</th>
+                    <th>Cantidad</th>
+                    <th>Precio Unitario</th>
+                    <th>Subtotal</th>
+                    <th class="text-center">Facturado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="consumo : ${consumos}">
+                    <td th:text="${consumo.fechaConsumo}"></td>
+                    <td th:text="${consumo.servicio.nombre}"></td>
+                    <td th:text="${consumo.cantidad}"></td>
+                    <td th:text="'S/ ' + ${#numbers.formatDecimal(consumo.precioUnitario, 1, 2)}"></td>
+                    <td th:text="'S/ ' + ${#numbers.formatDecimal(consumo.subtotal, 1, 2)}" class="fw-bold"></td>
+                    <td class="text-center">
+                        <span th:if="${consumo.facturado}" class="badge bg-success">Sí</span>
+                        <span th:unless="${consumo.facturado}" class="badge bg-warning">Pendiente</span>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4" class="text-end fw-bold">TOTAL PENDIENTE DE FACTURAR:</td>
+                    <td colspan="2" class="fw-bold fs-5 text-danger"
+                        th:with="totalPendiente=${#aggregates.sum(consumos.?[!facturado].![subtotal])}">
+                        S/ <span th:text="${#numbers.formatDecimal(totalPendiente, 1, 2)}"></span>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+</div>
+
+</body>
+</html>

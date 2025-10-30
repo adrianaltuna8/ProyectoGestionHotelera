@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html layout:decorate="~{base}">
+<head>
+    <title th:text="${habitacion.id != null} ? 'Editar Habitación' : 'Nueva Habitación'"></title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container mt-4">
+    <h1 th:text="${habitacion.id != null} ? 'Editar Habitación' : 'Nueva Habitación'" class="mb-4"></h1>
+
+    <div th:if="${error}" class="alert alert-danger fade show" role="alert">
+        <span th:text="${error}"></span>
+    </div>
+
+    <form th:action="@{/habitaciones/guardar}" th:object="${habitacion}" method="post">
+        <input type="hidden" th:field="*{id}">
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="numero" class="form-label">Número de Habitación:</label>
+                    <input type="text" id="numero" th:field="*{numero}" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="tipo" class="form-label">Tipo:</label>
+                    <select id="tipo" th:field="*{tipo}" class="form-select" required>
+                        <option value="">Seleccionar tipo</option>
+                        <option value="Simple">Simple</option>
+                        <option value="Doble">Doble</option>
+                        <option value="Suite">Suite</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="capacidad" class="form-label">Capacidad:</label>
+                    <input type="number" id="capacidad" th:field="*{capacidad}" class="form-control" min="1" required>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="precioPorNoche" class="form-label">Precio por Noche (USD):</label>
+                    <input type="number" step="0.01" id="precioPorNoche" th:field="*{precioPorNoche}" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="estado" class="form-label">Estado:</label>
+                    <select id="estado" th:field="*{estado}" class="form-select" required>
+                        <option value="">Seleccionar estado</option>
+                        <option value="Disponible">Disponible</option>
+                        <option value="Ocupada">Ocupada</option>
+                        <option value="En Limpieza">En Limpieza</option>
+                        <option value="Mantenimiento">Mantenimiento</option>
+                    </select>
+                </div>
+
+                <div class="mb-3" sec:authorize="hasRole('ADMIN')">
+                    <label class="form-label">Activo:</label>
+                    <div class="form-check form-switch">
+                        <input type="checkbox" id="flgEstado" th:field="*{flgEstado}" 
+                            class="form-check-input" value="1">
+                        <label for="flgEstado" class="form-check-label">Habilitar habitación</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-end mt-4">
+            <a th:href="@{/habitaciones}" class="btn btn-secondary me-2">Cancelar</a>
+            <button type="submit" class="btn btn-success">Guardar</button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

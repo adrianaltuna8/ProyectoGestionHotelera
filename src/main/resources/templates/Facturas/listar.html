@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html layout:decorate="~{base}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Gestión de Facturas</title>
+</head>
+<body>
+<div layout:fragment="content" class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="fw-bold">Gestión de Facturas</h1>
+    </div>
+
+    <!-- Mensajes de éxito o error -->
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <span th:text="${errorMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-primary text-center">
+                <tr>
+                    <th>ID</th>
+                    <th>Fecha Emisión</th>
+                    <th>Huésped</th>
+                    <th>Habitación</th>
+                    <th>Subtotal</th>
+                    <th>Impuestos</th>
+                    <th>Total</th>
+                    <th>Estado Pago</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="factura : ${facturas}">
+                    <td th:text="${factura.id}"></td>
+                    <td th:text="${#temporals.format(factura.fechaEmision, 'dd/MM/yyyy')}"></td>
+                    <td th:text="${factura.reserva.huesped.nombre}"></td>
+                    <td th:text="${factura.reserva.habitacion.numero}"></td>
+                    <td th:text="${#numbers.formatDecimal(factura.subtotal, 1, 2)} + ' USD'"></td>
+                    <td th:text="${#numbers.formatDecimal(factura.impuestos, 1, 2)} + ' USD'"></td>
+                    <td th:text="${#numbers.formatDecimal(factura.montoTotal, 1, 2)} + ' USD'"></td>
+                    <td>
+                        <span th:class="${factura.estadoPago == 'Pagada' ? 'badge bg-success' : 'badge bg-warning'}"
+                              th:text="${factura.estadoPago}"></span>
+                    </td>
+                    <td class="text-center">
+                        <a th:href="@{/facturas/{id}(id=${factura.id})}" class="btn btn-info btn-sm me-2">
+                            <i class="fas fa-eye"></i> Ver
+                        </a>
+                        <a th:if="${factura.estadoPago != 'Pagada'}"
+                           th:href="@{/facturas/pagar/{id}(id=${factura.id})}"
+                           class="btn btn-success btn-sm"
+                           onclick="return confirm('¿Confirmar el pago de esta factura?');">
+                           <i class="fas fa-check"></i> Pagar
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

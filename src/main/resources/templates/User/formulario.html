@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html layout:decorate="~{base}">
+<head>
+    <title th:text="${usuario.id != null} ? 'Editar Usuario' : 'Nuevo Usuario'"></title>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <h1 th:text="${usuario.id != null} ? 'Editar Usuario' : 'Nuevo Usuario'" class="mb-4"></h1>
+    <div th:if="${error}" class="alert alert-danger fade show" role="alert">
+        <span th:text="${error}"></span>
+    </div>
+    <form th:action="@{/usuarios/guardar}" th:object="${usuario}" method="post">
+        <input type="hidden" th:field="*{id}">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Nombre de usuario:</label>
+                    <input type="text" id="username" th:field="*{username}" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Contraseña:</label>
+                    <input type="password" id="password" th:field="*{password}" class="form-control" 
+                        th:attr="placeholder=${usuario.id != null} ? 'Dejar vacío para mantener la actual' : ''"
+                        th:required="${usuario.id == null}" minlength="6">
+                    <div class="form-text text-muted">Mínimo 6 caracteres</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="rol" class="form-label">Rol:</label>
+                    <select id="rol" th:field="*{rol}" class="form-select" required>
+                        <option value="">Seleccionar rol</option>
+                        <option value="ADMIN">Administrador</option>
+                        <option value="EMPLEADO">Empleado</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Estado:</label>
+                    <div class="form-check form-switch">
+                        <input type="checkbox" id="flgEstado" th:field="*{flgEstado}" 
+                        class="form-check-input" value="1">
+                        <label for="flgEstado" class="form-check-label">Usuario activo</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-end mt-4">
+            <a th:href="@{/usuarios}" class="btn btn-secondary me-2">Cancelar</a>
+            <button type="submit" class="btn btn-success">Guardar</button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

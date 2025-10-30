@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{base}">
+<head>
+    <title>Gestión de Reservas</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <h1>Gestión de Reservas</h1>
+        <div class="table-container">
+            <table class="reservas-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Huésped</th>
+                        <th>Fecha Entrada</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="reserva : ${reservas}">
+                        <td th:text="${reserva.id}">1</td>
+                        <td th:text="${reserva.nombreHuesped}">Juan Pérez</td>
+                        <td th:text="${reserva.fechaEntrada}">2025-08-15</td>
+                        <td th:text="${reserva.estado}">Activa</td>
+                        <td>
+                            <button class="btn-editar">Editar</button>
+                            <button class="btn-eliminar">Eliminar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="actions">
+            <button class="btn-primary">Nueva Reserva</button>
+        </div>
+    </div>
+
+</body>
+</html>
